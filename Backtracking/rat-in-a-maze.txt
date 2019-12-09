@@ -1,0 +1,73 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+
+void findPath(int maze[][20],int row,int col,int n)
+{
+    if(row==n-1 && col==n-1)
+    {
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(maze[i][j]==2)
+                {
+                    cout<<"1 ";
+                }
+                else
+                {
+                    cout<<"0 ";
+                }
+            }
+        }
+        cout<<endl;
+        return;
+    }
+        // if((maze[row][col+1]==1 && col<n-1)||(maze[row+1][col]==1 && row<n-1)||(maze[row-1][col]==1 && row>0 &&row<=n-1)||(maze[row][col-1]==1 && col<=n-1 &&col>=0))
+        // {
+            if(maze[row+1][col]==1 && row<n-1)
+            {
+                maze[row+1][col]=2;
+                findPath(maze,row+1,col,n);
+                maze[row+1][col]=1;
+            }
+            if(maze[row][col+1]==1 && col<n-1)
+            {
+                maze[row][col+1]=2;
+                findPath(maze,row,col+1,n);
+                maze[row][col+1]=1;
+            }
+            if(maze[row-1][col]==1 && row>0 &&row<=n-1)
+            {
+                maze[row-1][col]=2;
+                findPath(maze,row-1,col,n);
+                maze[row-1][col]=1;
+            }
+            if(maze[row][col-1]==1 && col<=n-1 &&col>=0)
+            {
+                maze[row][col-1]=2;
+                findPath(maze,row,col-1,n);
+                maze[row][col-1]=1;
+            }
+        // }
+    return ;
+}
+
+void ratInAMaze(int maze[][20], int n)
+{
+    maze[0][0]=2;
+    findPath(maze,0,0,n);
+}
+
+int main(){
+
+  int n; 
+  cin >> n ;
+  int maze[20][20];
+  for(int i = 0; i < n ;i++){
+	for(int j = 0; j < n; j++){
+        	cin >> maze[i][j];
+        }		
+  }
+  ratInAMaze(maze, n);
+}

@@ -1,0 +1,199 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define N 10
+
+bool findVacancyAndFill(char grid[N][N],string word,int arr[],int &row,int &col,int &align)
+{
+    for(int i=0;i<N;i++)
+    {
+        for(int j=0;j<N;j++)
+        {
+            if(grid[i][j]=='-' || grid[i][j]==word[0])
+            {
+                if(grid[i+1][j]=='-')
+                {
+                    int c=0;
+                    for(int a=i;((grid[a][j]=='-')||(grid[a][j]==word[a-i]));a++)
+                    {
+                        c++;
+                    }
+                    if(c>=word.length())
+                    {
+                        row=i;
+                        col=j;
+                        align=0;
+                        for(int a=i;a<i+word.length();a++)
+                        {
+                            if(grid[a][j]=='-')
+                            {
+                                grid[a][j]=word[a-i];
+                                arr[a-i]=0;
+                            }
+                            else
+                            {
+                                grid[a][j]=word[a-i];
+                                arr[a-i]=1;
+                            }
+                        }
+                        return true;
+                    }
+                }
+                if(grid[i][j+1]=='-')
+                {
+                    int c=0;
+                    for(int a=j;((grid[i][a]=='-')||(grid[i][a]==word[a-j]));a++)
+                    {
+                        c++;
+                    }
+                    if(c>=word.length())
+                    {
+                        row=i;
+                        col=j;
+                        align=1;
+                        for(int a=j;a<j+word.length();a++)
+                        {
+                            if(grid[i][a]=='-')
+                            {
+                                grid[i][a]=word[a-j];
+                                arr[a-j]=0;
+                            }
+                            else
+                            {
+                                grid[i][a]=word[a-j];
+                                arr[a-j]=1;
+                            }
+                        }
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+bool gridHelp(char grid[N][N],string word[],int n)
+{
+    if(n==0)
+    {
+        return true;
+    }
+    for(int i=0;i<n;i++)
+    {
+        int row,col,align;
+        string original=word[i];
+        int length=word[i].length();
+        int arr[length]={0};
+        if(findVacancyAndFill(grid,word[i],arr,row,col,align))
+        {
+            for(int j=i;j<n-1;j++)
+            {
+                word[j]=word[j+1];
+            }
+
+
+            if(gridHelp(grid,word,n-1))
+            {
+                return true;
+            }
+            for(int j=n-1;j>i;j--)
+            {
+                word[j]=word[j-1];
+            }
+            word[i]=original;
+
+            if(align==1)
+            {
+                for(int i=col,j=0;i<length+col;i++,j++)
+                {
+                    if(arr[j]==0)
+                    {
+                        grid[row][i]='-';
+                    }
+                }
+            }
+            if(align==0)
+            {
+                for(int i=row,j=0;i<length+row;i++,j++)
+                {
+                    if(arr[j]==0)
+                    {
+                        grid[i][col]='-';
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+int main() {
+    string input[10];
+    char grid[N][N];
+    string s;
+    for(int i=0;i<10;i++)
+    {
+        cin>>input[i];
+    }
+    for(int i=0;i<10;i++)
+    {
+        for(int j=0;j<10;j++)
+        {
+            grid[i][j]=input[i][j];
+        }
+    }
+    cin>>s;
+    int c=0;
+    for(int i=0;i<s.size();i++)
+    {
+        if(s[i]==';')
+        {
+            c++;
+        }
+    }
+    string word[c+1];
+    int j=0;
+    for(int i=0;i<s.size();i++)
+    {
+        if(s[i]!=';')
+        {
+            word[j]+=s[i];
+        }
+        else{
+            j++;
+        }
+    }
+    gridHelp(grid,word,c+1);
+    for(int i=0;i<10;i++)
+    {
+        for(int j=0;j<10;j++)
+        {
+            cout<<grid[i][j];
+        }
+        cout<<endl;
+    }
+    return 0;
+}
+
+
+// + - + + + + + + + +
+// + - + + - + + + + +
+// + - - - - - - - + +
+// + - + + - + + + + +
+// + - + + - + + + + +
+// + - + + - + + + + +
+// + + + + - + + + + +
+// + + + + - + + + + +
+// + + + + + + + + + +
+// - - - - - - - - - -
+// CALIFORNIA;NIGERIA;CANADA;TELAVIV
+
+// + - + + + + + + + +
+// + - + + - + + + + +
+// + - - - - + + + + +
+// + - + + - + + + + +
+// + - + + - + + + + +
+// + - + + - + + + + +
+// + + + + - + + + + +
+// + + + + - + + + + +
+// + + + + + + + + + +
+// - - - - - - - - - -
+// CALIFORNIA;NIGE;CANADA;TELAVIV
