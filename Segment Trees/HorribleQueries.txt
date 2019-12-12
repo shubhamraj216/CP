@@ -1,0 +1,104 @@
+#include <bits/stdc++.h>
+#define N 100005
+using namespace std;
+long lazy[4*N];
+long segment[4*N];
+ 
+void buildtree(int low,int high,int nodex)
+{
+    if(low>high)
+    return;
+    if(low==high)
+    {
+        segment[nodex]=0;
+        return;
+    }
+    int mid = low+(high-low)/2;
+    buildtree(low,mid,2*nodex+1);
+    buildtree(mid+1,high,2*nodex+2);
+    segment[nodex]=segment[2*nodex+1]+segment[2*nodex+2];
+}
+ 
+void update(int low,int high,int lowq,int highq,int nodex,long val)
+{
+    if(lazy[nodex])
+    {
+        segment[nodex]+=(high-low+1)*lazy[nodex];
+        if(high!=low)
+        {
+            lazy[2*nodex+1]+=lazy[nodex];
+            lazy[2*nodex+2]+=lazy[nodex];
+        }
+        lazy[nodex]=0;
+    }
+    if(lowq<=low && high<=highq)
+    {
+        segment[nodex]+=(high-low+1)*val;
+        if(high!=low)
+        {
+            lazy[2*nodex+1]+=val;
+            lazy[2*nodex+2]+=val;
+        }
+        return;
+    }
+    if(low>highq || high<lowq)
+        return;
+    
+    int mid=low+high;
+    mid=mid>>1;
+    update(low,mid,lowq,highq,2*nodex+1,val);
+    update(mid+1,high,lowq,highq,2*nodex+2,val);
+    segment[nodex]=segment[2*nodex+1]+segment[2*nodex+2];
+}
+ 
+long query(int low,int high,int lowq,int highq,int nodex)
+{
+    if(lazy[nodex]){
+        segment[nodex]+=(high-low+1)*lazy[nodex];
+        if(high!=low)
+        {
+            lazy[2*nodex+1]+=lazy[nodex];
+            lazy[2*nodex+2]+=lazy[nodex];
+        }
+        lazy[nodex]=0;
+    }
+    if(lowq<=low && high<=highq){
+        return segment[nodex];
+    }
+    if(low>highq || high<lowq)
+        return 0;
+    
+    int mid=low+high;
+    mid=mid>>1;
+    return query(low,mid,lowq,highq,2*nodex+1)+query(mid+1,high,lowq,highq,2*nodex+2);
+}
+int main(){
+    int q;
+    cin>>q;
+    int a,b;
+    while(q--)
+    {
+        memset(segment,0,sizeof(segment));
+        memset(lazy,0,sizeof(lazy));
+        cin>>a>>b;
+        int z;
+        int x,y;
+        long val;
+        buildtree(0,a-1,0);
+        while(b--)
+        {
+            cin>>z;
+            if(!z)
+            {
+                cin>>x>>y>>val;
+                update(0,a-1,x-1,y-1,0,val);
+            }
+            else
+            {
+               cin>>x>>y;
+               cout<<query(0,a-1,x-1,y-1,0)<<endl;
+            }
+        }    
+    }  
+    return 0;  
+}
