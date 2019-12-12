@@ -1,0 +1,107 @@
+#include<bits/stdc++.h>
+using namespace std;
+struct node1{
+    int a;
+    int b;
+};
+struct node2{
+    int I;
+    int A;
+    int B;
+};
+void buildtree(node1 arr[], node2 tree[], int start, int end, int nodex){
+    if(start==end){
+        tree[nodex].I=start;
+        tree[nodex].A=arr[start].a;
+        tree[nodex].B=arr[start].b;
+        return;
+    }
+    int mid=start+(end-start)/2;
+    buildtree(arr, tree, start, mid, 2*nodex);
+    buildtree(arr, tree, mid+1, end, 2*nodex+1);
+    
+    if(tree[2*nodex].A>tree[2*nodex+1].A){
+        tree[nodex].I=tree[2*nodex].I;
+        tree[nodex].A=tree[2*nodex].A;
+        tree[nodex].B=tree[2*nodex].B;
+    }else if(tree[2*nodex].A<tree[2*nodex+1].A){
+        tree[nodex].I=tree[2*nodex+1].I;
+        tree[nodex].A=tree[2*nodex+1].A;
+        tree[nodex].B=tree[2*nodex+1].B;
+    }else{
+        if(tree[2*nodex].B<tree[2*nodex+1].B){
+            tree[nodex].I=tree[2*nodex].I;
+            tree[nodex].A=tree[2*nodex].A;
+            tree[nodex].B=tree[2*nodex].B;
+        }else if(tree[2*nodex].B>tree[2*nodex+1].B){
+            tree[nodex].I=tree[2*nodex+1].I;
+            tree[nodex].A=tree[2*nodex+1].A;
+            tree[nodex].B=tree[2*nodex+1].B;
+        }else{
+            if(tree[2*nodex].I>tree[2*nodex+1].I){
+                tree[nodex].I=tree[2*nodex+1].I;
+                tree[nodex].A=tree[2*nodex+1].A;
+                tree[nodex].B=tree[2*nodex+1].B;
+            }else{
+                tree[nodex].I=tree[2*nodex].I;
+                tree[nodex].A=tree[2*nodex].A;
+                tree[nodex].B=tree[2*nodex].B;
+            }
+        }
+    }
+}
+node2 query(node2 tree[], int start, int end, int left, int right, int nodex){
+    node2 temp;
+    temp.I=INT_MAX;
+    temp.A=INT_MIN;
+    temp.B=INT_MAX;
+    if(start>right || end<left){
+        return temp;
+    }
+    if(start>=left && end<=right){
+        return tree[nodex];
+    }
+    int mid=start+(end-start)/2;
+    node2 ans1=query(tree, start, mid, left, right, 2*nodex);
+    node2 ans2=query(tree, mid+1, end, left, right, 2*nodex+1);
+    
+    if(ans1.A>ans2.A){
+        return ans1;
+    }else if(ans1.A<ans2.A){
+        return ans2;
+    }else{
+        if(ans1.B<ans2.B){
+            return ans1;
+        }else if(ans1.B>ans2.B){
+            return ans2;
+        }else{
+            if(ans1.I>ans2.I){
+                return ans2;
+            }else{
+                return ans1;
+            }
+        }
+    }
+}
+int main() {
+    int n;
+    cin>>n;
+    node1 arr[n];
+    for(int i=0;i<n;i++){
+        cin>>arr[i].a;
+    }
+    for(int i=0;i<n;i++){
+        cin>>arr[i].b;
+    }
+    node2* tree= new node2[4*n];
+    buildtree(arr, tree, 0, n-1, 1);
+    int q;
+    cin>>q;
+    while(q--){
+        int l,r;
+        cin>>l>>r;
+        cout<<query(tree, 0, n-1, l-1, r-1, 1).I+1<<endl;
+    }
+    return 0;
+	// Write your code here
+}
