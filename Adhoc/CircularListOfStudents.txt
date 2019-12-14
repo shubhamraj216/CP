@@ -1,0 +1,22 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    long long t;
+    cin>>t;
+    while(t--)
+    {
+        long long i;
+        long long p;
+        cin>>i>>p;
+        if(i+p<=11)
+        {
+            cout<<i+p<<endl;
+        }
+        else
+        {
+            cout<<((i+p)%12)<<endl;
+        }
+    }
+	return 0;
+}
