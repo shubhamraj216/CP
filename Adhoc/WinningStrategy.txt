@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main() {
+    int n;
+    cin>>n;
+    int swap;
+    int* arr=new int[n];
+    for(int i=0;i<n;i++)
+    {
+        cin>>arr[i];
+    }
+    for(int i=n-1;i>1;i--)
+    {
+        if(arr[i]!=i+1)
+        {
+            if(arr[i-1]==i+1)
+            {
+                arr[i-1]=arr[i];
+                arr[i]=i+1;
+                swap++;
+            }
+            else if(arr[i-2]==i+1)
+            {
+                arr[i-2]=arr[i-1];
+                arr[i-1]=arr[i];
+                arr[i]=i+1;
+                swap+=2;
+            }
+            else
+            {
+                cout<<"NO";
+                return 0;
+            }
+        }
+    }
+    if(arr[0]!=1)
+    {
+        swap++;
+    }
+    cout<<"YES"<<endl<<swap;
+    return 0;
