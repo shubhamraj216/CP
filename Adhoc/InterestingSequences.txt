@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main() {
+    int n,k,l;
+    cin>>n>>k>>l;
+    int* arr=new int[n];
+    for(int i=0;i<n;i++)
+    {
+        cin>>arr[i];
+    }
+    sort(arr,arr+n);
+    int li=arr[0];
+    int ri=arr[n-1];
+    long long mincost=pow(10,9);
+    for(int i=li;i<=ri;i++)
+    {
+        int lower=0;
+        int higher=0;
+        int cost=0;
+        for(int j=0;j<n;j++)
+        {
+            if(arr[j]<i)
+            {
+                lower+=(i-arr[j]);
+            }
+            if(arr[j]>i)
+            {
+                higher+=(arr[j]-i);
+            }
+        }
+        if(higher>lower)
+        {
+            continue;
+        }
+        else
+        {
+            cost=higher*k-(higher-lower)*l;
+        }
+        if(cost<mincost)
+        {
+            mincost=cost;
+        }
+    }
+    cout<<mincost;
+	// Write your code here
+}
