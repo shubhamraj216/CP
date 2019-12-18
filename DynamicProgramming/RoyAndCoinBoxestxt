@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int n;
+    cin>>n;
+    int *start=new int[n+1];
+    int *end=new int[n+1];
+    int *occur=new int[n+1];
+    int *boxes=new int[n+1];
+    int *ans=new int[n+1];
+    memset(start,0,sizeof(start));
+    memset(end,0,sizeof(end));
+    memset(occur,0,sizeof(occur));
+    memset(boxes,0,sizeof(boxes));
+    memset(ans,0,sizeof(ans));
+    int m;
+    cin>>m;
+    
+    while(m--)
+    {
+        int l,r;
+        cin>>l>>r;
+        start[l]++;
+        end[r]++;
+    }
+    occur[1]=start[1];
+    for(int i=2;i<=n;i++)
+    {
+        occur[i]=start[i]+occur[i-1]-end[i-1];
+    }
+    
+    for(int i=1;i<=n;i++)
+    {
+        boxes[occur[i]]++;
+    }
+    
+    ans[n]=boxes[n];
+    for(int i=n-1;i>=1;i--)
+    {
+        ans[i]=ans[i+1]+boxes[i];
+    }
+    
+    int q;
+    cin>>q;
+    for(int i=0;i<q;i++)
+    {
+        int x;
+        cin>>x;
+        cout<<ans[x]<<"\n";
+    }
+    
+    return 0;
+}
