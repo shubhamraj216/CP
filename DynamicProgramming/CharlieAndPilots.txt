@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+int findsal(int *cap,int *ass,int n,int diff,int dp[10009][5009])
+{
+    if(n==0)
+    {
+        return 0;
+    }
+    if(dp[n][diff]>-1)
+    {
+        return dp[n][diff];
+    }
+    if(diff==0)
+    {
+        return ass[0]+findsal(cap+1,ass+1,n-1,diff+1,dp);
+    }
+    
+    if(diff==n)
+    {
+        return cap[0]+findsal(cap+1,ass+1,n-1,diff-1,dp);
+    }
+    
+    int op1=ass[0]+findsal(cap+1,ass+1,n-1,diff+1,dp);
+    int op2=cap[0]+findsal(cap+1,ass+1,n-1,diff-1,dp);
+    dp[n][diff]=min(op1,op2);
+    return min(op1,op2);
+}
+int main()
+{
+    int i=0;
+    int n;
+    cin>>n;
+    int *cap=new int[n];
+    int *ass=new int[n];
+    while(i<n)
+    {
+        cin>>cap[i]>>ass[i];
+        i++;
+    }
+    int dp[10009][5009];
+        for(int i=0;i<10005;i++)
+        {
+            for(int j=0;j<5005;j++)
+            {
+                    dp[i][j]=-1;
+            }
+        }
+    cout<<findsal(cap,ass,n,0,dp);
+    return 0;
+}
