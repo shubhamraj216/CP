@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+using namespace std;
+int minamt(int** arr,int si,int sj,int n,int m,int** dp)
+{
+    if(si==n)
+    {
+        return 0;
+    }
+    if(dp[si][sj]>-1)
+    {
+        return dp[si][sj];
+    }
+    int option1=10000,option2=10000,option3=10000;
+    
+    if(sj-1>=0)
+    option1=arr[si][sj]+minamt(arr,si+1,sj-1,n,m,dp);
+    
+    option2=arr[si][sj]+minamt(arr,si+1,sj,n,m,dp);
+    
+    if(sj+1<m)
+    option3=arr[si][sj]+minamt(arr,si+1,sj+1,n,m,dp);
+    
+    int ans=min(option1,option2);
+    ans=min(ans,option3);
+    // if(sj+1>m)
+    // {
+    //     ans=min(option1,option2);
+    // }
+    // if(sj-1<0)
+    // {
+    //     ans=min(option2,option3);
+    // }
+    dp[si][sj]=ans;
+    return ans;
+}
+int main()
+{
+    int n,m;
+    cin>>n>>m;
+    int i=0,j=0;
+    int** arr=new int* [n+1];
+    while(i<=n)
+    {
+        arr[i]=new int [m+1];
+        i++;
+    }
+    i=0,j=0;
+    while(i<n)
+    {
+        j=0;
+        while(j<m)
+        {
+            cin>>arr[i][j];
+            j++;
+        }
+        i++;
+    }
+    i=0,j=0;
+    int** dp=new int* [n+1];
+    while(i<=n)
+    {
+        dp[i]=new int [m+1];
+        j=0;
+        while(j<=m)
+        {
+            dp[i][j]=-1;
+            j++;
+        }
+        i++;
+    }
+    
+    int si=0,sj=0,ans=INT_MAX;
+    
+    while(sj<m)
+    {
+        ans=min(minamt(arr,si,sj,n,m,dp),ans);
+        sj++;
+    }
+    cout<<ans;
+    return 0;
+}
