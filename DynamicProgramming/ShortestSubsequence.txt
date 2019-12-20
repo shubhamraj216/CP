@@ -1,0 +1,61 @@
+#include<bits/stdc++.h>
+using namespace std;
+int findans(string s,string v,int i,int j,int len1,int len2,int **dp)
+{
+    
+    if(j>=len2)
+    {
+        return 1;
+    }
+    if(i>=len1)
+    {
+        return 2000;
+    }
+    if(dp[i][j]>-1)
+    {
+        return dp[i][j];
+    }
+    int op1=findans(s,v,i+1,j,len1,len2,dp);
+    int flag=-1;
+    for(int k=j;k<len2;k++)
+    {
+        if(s.at(i)==v.at(k))
+        {
+            flag=k;
+            break;
+        }
+    }
+    if(flag==-1)
+    {
+         dp[i][j]=1;
+        return 1;
+    }
+    int op2=1+findans(s,v,i+1,flag+1,len1,len2,dp);
+    int ans=min(op1,op2);
+    dp[i][j]=ans;
+    return dp[i][j];
+}
+int solve(string s,string v)
+{
+    int len1=s.length();
+    int len2=v.length();
+    int **dp=new int *[len1+1];
+    for(int i=0;i<=len1;i++)
+    {
+        dp[i]=new int[len2+1];
+        for(int j=0;j<=len2;j++)
+        {
+            dp[i][j]=-1;
+        }
+    }
+    
+    return findans(s,v,0,0,len1,len2,dp);
+}
+
+int main()
+{
+	string S,V;
+	cin>>S>>V;
+	cout<<solve(S,V)<<endl;
+	return 0;
+}
