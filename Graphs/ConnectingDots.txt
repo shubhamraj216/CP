@@ -1,0 +1,65 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 51
+
+int arr[4][2]={{-1,0},{0,1},{1,0},{0,-1}};
+int visited[MAXN][MAXN];
+int z=0;
+bool ispossible(char board[][MAXN],int n, int m, int x, int y, char ch){
+    if(x>=0 && y>=0 && x<n && y<m && board[x][y]==ch){
+        return true;
+    }
+    return false;
+}
+void checked(char board[][MAXN],int n, int m, int x, int y, char ch, int c){
+    if(c==4){
+        for(int i=0;i<4;i++){
+            int u=x+arr[i][0];
+            int v=y+arr[i][1];
+            if(ispossible(board, n, m, u, v, ch) && visited[u][v]==2){
+                z=1;
+                return;
+            }
+        }
+    }
+    
+    for(int i=0;i<4;i++){
+        int u=x+arr[i][0];
+        int v=y+arr[i][1];
+        if(ispossible(board, n, m, u, v, ch) && !visited[u][v]){
+            c++;
+            visited[u][v]=1;
+            checked(board, n, m, u, v, ch, c);
+            if(z){
+                return;
+            }
+            visited[u][v]=0;
+        }
+    }
+}
+int solve(char board[][MAXN],int n, int m)
+{
+	// Write your code here.
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            visited[i][j]=2;
+            checked(board, n, m, i, j, board[i][j], 1);
+            if(z){
+                return 1;
+            }
+            visited[i][j]=2;
+        }
+    }
+    return 0;
+}
+
+int main()
+{
+	int N,M,i;
+	char board[MAXN][MAXN];
+	cin>>N>>M;
+	for(i = 0;i < N; i++){
+		cin>>board[i];
+	}
+	cout<<solve(board,N,M)<<endl;
+}
