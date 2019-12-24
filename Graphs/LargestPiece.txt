@@ -1,0 +1,55 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+#define NMAX 55
+int traverse[4][2]={{-1,0},{1,0},{0,-1},{0,1}};
+bool visited[NMAX][NMAX];
+int z=0;
+bool ispossible(int n, char cake[NMAX][NMAX], int x, int y){
+    if(x>=0 && y>=0 && x<n && y<n && cake[x][y]=='1'){
+        return true;
+    }
+    return false;
+}
+int finder(int n, char cake[NMAX][NMAX], int x, int y){
+    int z=0;
+    for(int i=0;i<4;i++){
+        int a=x+traverse[i][0];
+        int b=y+traverse[i][1];
+        if(ispossible(n, cake, a, b) && !visited[a][b]){
+            visited[a][b]=true;
+            z+=(1+finder(n,cake,a,b));
+        }
+    }
+    return z;
+}
+int solve(int n,char cake[NMAX][NMAX])
+{
+	// Write your code here .
+    int max=0;
+    int count;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(cake[i][j]=='1' && !visited[i][j]){
+                count=1;
+                visited[i][j]=true;
+                count+=finder(n, cake, i, j);
+                if(count>max){
+                    max=count;
+                }
+            }
+        }
+    }
+    return max;
+}
+char cake[NMAX][NMAX];
+int main()
+{
+	int n;
+	cin>>n;
+	for(int i=0;i<n;i++)
+	{
+		scanf("%s",cake[i]);
+	}
+	cout<<solve(n,cake)<<endl;
+}
