@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int getminer(bool* visited, int* weight, int n){
+    int min=INT_MAX;
+    int z=0;
+    for(int i=0;i<n;i++){
+        if(!visited[i] && weight[i]<min){
+            min=weight[i];
+            z=i;
+        }
+    }
+    return z;
+}
+
+void dijkstra(int** edges, int n){
+    int* weight=new int[n];
+    bool* visited=new bool[n]();
+    
+    for(int i=0;i<n;i++){
+        weight[i]=INT_MAX;
+    }
+    weight[0]=0;
+    
+    for(int i=0;i<n-1;i++){
+        int miner=getminer(visited, weight, n);
+        visited[miner]=1;
+        for(int j=0;j<n;j++){
+            if(edges[miner][j] && !visited[j]){
+                if(weight[j]>edges[miner][j]+weight[miner]){
+                    weight[j]=edges[miner][j]+weight[miner];
+                }
+            }
+        }
+    }
+    
+    for(int i=0;i<n;i++){
+        cout<<i<<" "<<weight[i]<<endl;
+    }
+}
+
+int main()
+{
+  int V, E, tempX, tempY;
+  cin >> V >> E;
+
+  /*
+
+  	   Write Your Code Here
+	   Complete the Rest of the Program
+	   You have to Print the output yourself
+	 
+  */
+    int** edges=new int*[V];
+    for(int i=0;i<V;i++){
+        edges[i]=new int[V];
+        for(int j=0;j<V;j++){
+            edges[i][j]=0;
+        }
+    }
+    int x,y,z;
+    for(int i=0;i<E;i++){
+        cin>>x>>y>>z;
+        edges[x][y]=z;
+        edges[y][x]=z;
+    }
+    dijkstra(edges, V);
+
+  return 0;
+}
