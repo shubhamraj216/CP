@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct edges{
+    int v1;
+    int v2;
+    int wt;
+};
+
+bool sorter(edges a, edges b){
+    if(a.wt==b.wt){
+        if(a.v1==b.v1){
+            return a.v2>=b.v2;
+        }
+        return a.v1<b.v1;
+    }
+    return a.wt<b.wt;
+}
+
+int checkparent(int x, int* parent){
+    if(x==parent[x]){
+        return x;
+    }else{
+        return checkparent(parent[x], parent);
+    }
+    // return parent[x];
+}
+
+int main()
+{
+  int V, E, tempX, tempY;
+  cin >> V >> E;
+
+  /*
+
+  	   Write Your Code Here
+	   Complete the Rest of the Program
+	   You have to Print the output yourself
+	 
+  */
+    edges arr[E];
+    int x,y,z;
+    for(int i=0;i<E;i++){
+        cin>>x>>y>>z;
+        if(x>y){
+            arr[i].v1=y;
+            arr[i].v2=x;
+        }else{
+            arr[i].v1=x;
+            arr[i].v2=y;
+        }
+        arr[i].wt=z;
+    }
+    sort(arr,arr+E,sorter);
+    int parent[V];
+    for(int i=0;i<V;i++){
+        parent[i]=i;
+    }
+    int count=0;
+    for(int i=0;i<E;i++){
+        if(count==V-1){
+            break;
+        }
+        int parentx = checkparent(arr[i].v1,parent);
+        int parenty = checkparent(arr[i].v2,parent);
+        if(parentx!=parenty){
+            //parent[arr[i].v2]=parentx/*[arr[i].v1]*/;
+            parent[parenty]=parent[parentx];
+            cout<<arr[i].v1<<" "<<arr[i].v2<<" "<<arr[i].wt<<endl;
+            // for(int i=0;i<V;i++){
+            //     cout<<parent[i]<<" ";
+            // }cout<<endl;
+            count++;
+        }
+    }
+  return 0;
+}
