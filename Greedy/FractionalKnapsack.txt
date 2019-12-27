@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+bool sorter(const pair<long long,pair<long long,float> > &a,const pair<long long,pair<long long,float> > &b)
+{
+    if(a.first==b.first)
+    {
+        return a.second.first>b.second.first;
+    }
+    else
+    {
+        return a.first<b.first;
+    }
+}
+int main()
+{
+    //Write your code here
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    long long n;
+    long long d;
+    cin>>n>>d;
+    long long arr[n][3];
+    for(long long i=0;i<n;i++)
+    {
+        for(long long j=0;j<3;j++)
+        {
+            cin>>arr[i][j];
+        }
+    }                                             
+
+    vector<pair<long long,pair<long long,float> > >vect;                           //get it done at earliest time
+    for(long long i=0;i<n;i++)
+    {
+        vect.push_back(make_pair(arr[i][0],make_pair(arr[i][2],arr[i][1])));        //vect(time,(speed,cost))
+    }
+    sort(vect.begin(), vect.end(),sorter);
+    // for(long long i=0;i<n;i++)
+    // {
+    //     cout<<vect[i].first<<" "<<vect[i].second.first<<endl;
+    // }
+    long long cost=vect[0].second.second;
+    long long ongoingworker=0;
+    long long speed=vect[0].second.first;
+    long long rem_area=d-(vect[1].first-vect[0].first)*(vect[0].second.first);
+    if(rem_area<=0)
+    {
+        cout<<cost;
+        return 0;
+    }
+    else
+    {
+        for(long long i=1;i<n-1;i++)
+        {
+            if(vect[i].second.first>speed)
+            {
+                cost+=vect[i].second.second;
+                rem_area-=(vect[i+1].first-vect[i].first)*vect[i].second.first;
+                speed=vect[i].second.first;
+                ongoingworker=i;
+            }
+            else
+            {
+                rem_area-=(vect[i+1].first-vect[i].first)*vect[ongoingworker].second.first;
+            }
+            if(rem_area<=0)
+            {
+                cout<<cost;
+                return 0;
+            }
+        }
+        if(rem_area>0)
+        {
+            if(vect[n-1].second.first>speed)
+            {
+                cost+=vect[n-1].second.second;
+                cout<<cost;
+            }
+            else
+            {
+                cout<<cost;
+            }            
+        }
+
+    }
+
+
+    return 0;
+}
