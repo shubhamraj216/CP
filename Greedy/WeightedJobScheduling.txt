@@ -1,0 +1,92 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct Job{
+    long long start;
+    long long finish;
+    long long profit;
+};
+
+bool sorter(Job a,Job b){
+    return a.finish<b.finish;
+}
+
+// bool sorter(const pair<long long,pair<long long,long long> > &a,const pair<long long,pair<long long,long long> > &b){
+//     if(a.second.first==b.second.first){
+//         if(a.first==b.first){
+//             return a.second.second>=b.second.second;
+//         }
+//         return a.first<b.first;
+//     }
+//     return a.second.first<b.second.first;
+// }
+
+long long checker(Job arr[],long long left,long long right,long long i){
+    if(left<=right){
+        long long mid=left+(right-left)/2;
+        if(arr[mid].finish<=arr[i].start){
+            return checker(arr,mid+1,right,i);
+        }
+        else{
+            return checker(arr,left,mid-1,i);
+        }
+    }
+    return left-1;
+}
+
+// long long checker(vector<pair<long long,pair<long long,long long> > >vect,long long left,long long right,long long i){
+
+//     if(left<=right)
+//     {
+//         long long mid=(left+right)/2;
+//         if(vect[mid].second.first<=vect[i].first){
+//             return checker(vect,mid+1,right,i);
+//         }
+//         else{
+//             return checker(vect,left,mid-1,i);
+//         }
+//     }
+//     return left-1;
+// }
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    long long n;
+    cin>>n;
+    // long long arr[n][3];
+    // vector<pair<long long,pair<long long,long long> > >vect;
+    // for(long long i=0;i<n;i++){
+    //     for(long long j=0;j<3;j++){
+    //         cin>>arr[i][j];
+    //     }
+    //     vect.push_back(make_pair(arr[i][0],make_pair(arr[i][1],arr[i][2])));   //start,(finish, profit)
+    // }
+    // sort(vect.begin(),vect.end(),sorter);
+    Job arr[n];
+    for(long long i=0;i<n;i++){
+        cin>>arr[i].start>>arr[i].finish>>arr[i].profit;
+    }
+    sort(arr,arr+n,sorter);    
+
+    long long* dp=new long long[n] ;
+    // dp[0]=vect[0].second.second;
+    dp[0]=arr[0].profit;
+    for(long long i=1;i<n;i++)
+    {
+        long long LNC=-1;
+        // long long profit=vect[i].second.second;
+        long long profit=arr[i].profit;
+        //LNC=checker(vect,0,i-1,i);
+        LNC=checker(arr,0,i-1,i);
+        if(LNC!=-1){
+            profit+=dp[LNC];
+        }
+
+        dp[i]=max(dp[i-1],profit);
+    }
+    cout<<dp[n-1];
+    delete[] dp;
+    return 0;
+}
