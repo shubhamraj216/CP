@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+typedef long long ll;
+ 
+using namespace std;
+ 
+vector<vector<ll>> graph;
+ll n,m;
+vector<bool> vis;
+vector<ll> dis;
+ 
+void bfs(ll x)
+{
+    vis.resize(n);
+    dis.resize(n);
+    for(int j=0;j<n;j++)
+     {
+         vis[j]=false;
+         dis[j]=-1;
+     }
+    queue< ll > q;
+    q.push(x);
+    vis[x]=true;
+    dis[x]=0;
+    while(!q.empty())
+    {
+        ll var = q.front();
+        q.pop();
+        for(int i=0;i<(ll)graph[var].size();i++)
+        {
+            if(!vis[graph[var][i]])
+            {
+                vis[graph[var][i]]=true;
+                dis[graph[var][i]]=dis[var]+1;
+                q.push(graph[var][i]);
+            }
+        }
+ 
+    }
+}
+ 
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    ll t;
+    cin >> t;
+    t++;
+    while(--t)
+    {
+    cin >> n >> m;
+    
+    graph.resize(n);
+    graph.clear();
+    for(int i=0;i<m;i++)
+    {
+        ll a,b;
+        cin>>a>>b;
+        graph[a-1].push_back(b-1);
+        graph[b-1].push_back(a-1);
+    }
+    bfs(0);
+    cout<<dis[n-1];
+    cout<<endl;
+    }
+    return 0;
+}
