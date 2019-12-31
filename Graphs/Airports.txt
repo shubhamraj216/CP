@@ -1,0 +1,123 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+struct Edge
+{
+    int weight;
+    int start;
+    int end;
+    
+};
+ 
+struct DisjointSet
+{
+    int rank;
+    int parent;
+    
+};
+ 
+int find(DisjointSet *ds, int x)
+{
+    if(ds[x].parent != x)
+        ds[x].parent = find(ds,ds[x].parent);
+ 
+    return ds[x].parent;
+}
+ 
+void Union(DisjointSet *ds, int x, int y)
+{
+    int rootX = find(ds,x);
+    int rootY = find(ds,y);
+ 
+    if(ds[rootX].rank < ds[rootY].rank)
+    {
+        ds[rootX].parent = rootY;
+    }
+    else if(ds[rootX].rank > ds[rootY].rank)
+    {
+        ds[rootY].parent = rootX;
+    }
+    else
+    {
+        ds[rootX].parent = rootY;
+        ds[rootY].rank++;
+    }
+}
+ 
+bool isUnion(DisjointSet *ds, int x, int y)
+{
+    return find(ds,x) == find(ds,y);
+}
+ 
+pair<int,int> pcostOfAirports(Edge *graph, DisjointSet *ds, int pcost, int n, int m)
+{
+    int totalCost = 0;
+    int airCount = 0;
+ 
+    int j = 0;
+ 
+    for(int i = 0; i < m &&  j < n-1 && graph[i].weight < pcost; i++)
+    {
+        if(!isUnion(ds,graph[i].start,graph[i].end))
+        {
+            totalCost += graph[i].weight;
+            Union(ds, graph[i].start, graph[i].end);
+            j++;
+        }
+    }
+ 
+    for(int i = 0; i < n; i++)
+    {
+        if(ds[i].parent == i)
+        {
+            totalCost += pcost;
+            airCount++;
+        }
+    }
+    return make_pair(totalCost,airCount);
+}
+ 
+bool compare(Edge a,Edge b)
+{
+    return a.weight < b.weight;
+}
+ 
+int main()
+{
+    int t;
+    cin >> t;
+ 
+    int k = 1;
+    while(k <= t)
+    {
+        int n,m,pcost;
+        cin >> n >> m >> pcost;
+ 
+        Edge *graph = new Edge[m];
+        for(int i = 0; i < m; i++)
+        {
+            int a,b,c;
+            cin >> a >> b >> c;
+            graph[i].weight = c;
+            graph[i].start =a-1;
+            graph[i].end =b-1;
+        }
+ 
+        DisjointSet *ds = new DisjointSet[n];
+ 
+        for(int i = 0; i < n; i++)
+        {
+            ds[i]={0,i};
+            // ds[i].parent = i;
+            // ds[i].rank = 0;
+        }
+ 
+        sort(graph, graph + m, compare);
+ 
+        pair<int,int> ans = pcostOfAirports(graph,ds,pcost,n,m);
+ 
+        cout <<  "Case #" << k << ": " << ans.first << " " << ans.second << endl;
+ 
+        k++;
+    }
+}
