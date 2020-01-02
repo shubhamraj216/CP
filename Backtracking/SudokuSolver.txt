@@ -1,0 +1,126 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define N 9
+bool safeBox(int arr[N][N],int row,int col,int val)
+{
+    int truei=row/3;
+    int truej=col/3;
+    for(int i=3*truei;i<3*truei+3;i++)
+    {
+        for(int j=3*truej;j<3*truej+3;j++)
+        {
+            if(arr[i][j]==val)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+bool safeCol(int arr[N][N],int col,int val)
+{
+    for(int i=0;i<9;i++)
+    {
+        if(arr[i][col]==val)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+bool safeRow(int arr[N][N],int row,int val)
+{
+    for(int i=0;i<9;i++)
+    {
+        if(arr[row][i]==val)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+bool safe(int arr[N][N],int row,int col,int i)
+{
+    if(safeRow(arr,row,i) && safeCol(arr,col,i) && safeBox(arr,row,col,i))
+    {
+        return true;
+    }
+    return false;
+}
+bool vacantPosition(int arr[N][N],int &row,int &col)
+{
+    for(int i=0;i<9;i++)
+    {
+        for(int j=0;j<9;j++)
+        {
+            if(arr[i][j]==0)
+            {
+                row=i;
+                col=j;
+                return true;
+            }
+            
+        }
+    }
+    return false;
+}
+bool sudokuuSolver(int arr[N][N])
+{
+    int row,col;
+    if(!vacantPosition(arr,row,col))
+    {
+        return true;
+    }
+    for(int i=1;i<=9;i++)
+    {
+        if(safe(arr,row,col,i))
+        {
+            arr[row][col]=i;
+            if(sudokuuSolver(arr))
+            {
+                return true;
+            }
+            arr[row][col]=0;
+        }
+    }
+    return false;
+}
+
+
+bool sudokuSolver(int board[][9]){
+
+  /* Don't write main().
+   *  Don't read input, it is passed as function argument.
+   *  Don't print output and return output as specified in the question
+  */
+    sudokuuSolver(board);
+    for(int i=0;i<9;i++)
+    {
+        for(int j=0;j<9;j++)
+        {
+            if(board[i][j]==0)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+
+}
+
+int main(){
+
+  int n = 9; 
+  int board[9][9];
+  for(int i = 0; i < n ;i++){
+	for(int j = 0; j < n; j++){
+        	cin >> board[i][j];
+        }		
+  }
+  if(sudokuSolver(board)){
+	cout << "true";	
+  }else{
+	cout << "false";	
+  }
+}
