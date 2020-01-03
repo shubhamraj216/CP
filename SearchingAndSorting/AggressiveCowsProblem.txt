@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long int lli;
+bool check(lli arr[],int n,int c,lli mid)
+{
+    lli start=arr[0];
+    c--;
+    for(int i=0;i<n;i++)
+    {
+        if(arr[i]>=start+mid)
+        {
+            c--;
+            start=arr[i];
+
+        }
+        if(c==0)
+        {
+            return true;
+        }
+    }    
+        return false;   
+}
+
+int main() {
+
+	// Write your code here
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n,c;
+        cin>>n>>c;
+        lli arr[n];
+        for(int i=0;i<n;i++)
+        {
+            cin>>arr[i];
+        }
+        sort(arr,arr+n);
+        lli start=arr[0];
+        lli end=arr[n-1]-arr[0];
+        lli ans=-1;
+        while(start<=end)
+        {
+            lli mid=start+(end-start)/2;
+            if(check(arr,n,c,mid))
+            {
+                ans=mid;
+                start=mid+1;
+            }
+            else{
+                end=mid-1;
+            }
+        }
+
+        cout<<ans<<endl;
+        
+    }
+    return 0;
+}
