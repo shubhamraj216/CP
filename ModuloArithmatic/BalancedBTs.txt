@@ -1,0 +1,23 @@
+#include<bits/stdc++.h>
+
+long long findAns(long long n,long long i,long long prev,long long prevprev)
+{ 
+    long long ll=pow(10,9)+7;
+    long long ans=((prev*prev)%ll+(2*prev*prevprev)%ll)%ll;
+    if(i==n)
+    {
+        return ans;
+    }
+    prevprev=prev;
+    prev=ans;
+    return findAns(n,i+1,prev,prevprev);
+}
+
+int balancedBTs(int h) {
+  /* Don't write main().
+     Don't read input, it is passed as function argument.
+     Return the output and don’t print it.
+  */long long prev=1;
+    long long prevprev=1;
+    return findAns(h,2,prev,prevprev);
+}
