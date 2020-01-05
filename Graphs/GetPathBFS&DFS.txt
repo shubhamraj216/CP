@@ -1,0 +1,152 @@
+//BFS
+#include <bits/stdc++.h>
+using namespace std;
+unordered_map<int,int>mp;
+queue<int> mq;
+int x=0;
+void print(int sv, int ev){
+    if(sv==ev){
+        cout<<sv<<" ";
+        return;
+    }
+    cout<<mp.find(ev)->first<<" ";
+    print(sv, mp.find(ev)->second);
+}
+void BFS(int** edges, int n, int sv, int ev, bool* visited){
+    if(sv==ev || mq.empty()){
+        return;
+    }
+    if(!mq.empty()){
+        mq.pop();
+    }
+    for(int i=0;i<n;i++){
+        if(edges[sv][i]==1 && !visited[i]){
+            mp.insert(pair<int,int>(i, sv));
+            mq.push(i);
+            visited[i]=true;
+            if(i==ev){
+                x=1;
+                return;
+            }
+        }
+    }
+    BFS(edges, n, mq.front(), ev, visited);
+}
+int main()
+{
+  int V, E, tempX, tempY;
+  cin >> V >> E;
+
+  /*
+
+  	   Write Your Code Here
+	   Complete the Rest of the Program
+	   You have to Print the output yourself
+	 
+  */
+    int** edges=new int*[V];
+    for(int i=0;i<V;i++){
+        edges[i]=new int[V];
+        for(int j=0;j<V;j++){
+            edges[i][j]=0;
+        }
+    }
+    for(int i=0;i<E;i++){
+        cin>>tempX>>tempY;
+        edges[tempX][tempY]=1;
+        edges[tempY][tempX]=1;
+    }
+    bool* visited=new bool[V];
+    int sv,ev;
+    cin>>sv>>ev;
+    mq.push(sv);
+    BFS(edges, V, sv, ev, visited);
+    if(x){
+        print(sv, ev);
+    }
+  return 0;
+}
+
+
+
+
+
+//DFS
+#include <bits/stdc++.h>
+using namespace std;
+
+queue<int>mq;
+void DFS(int** edges, int n, int sv, int ev, bool* visited){
+    if(sv==ev){
+        mq.push(sv);
+        return;
+    }
+    // if(edges[sv][ev]==1){
+    //     mq.push(ev);
+    //     mq.push(sv);
+    //     return;
+    // }
+    visited[sv]=true;
+    for(int i=0;i<n;i++){
+        if(i==sv){
+            continue;
+        }
+        if(edges[sv][i]==1 && !visited[i]){
+            visited[i]=true;
+            DFS(edges, n, i, ev, visited);
+            if(mq.front()==ev){
+                mq.push(sv);
+                return;
+            }
+        }
+    }
+    // for(int i=sv;i<n;i++){
+    //     if(i==sv){
+    //         continue;
+    //     }
+    //     if(edges[sv][i]==1 && !visited[i]){
+    //         visited[i]=true;
+    //         DFS(edges, n, i, ev, visited);
+    //         if(mq.front()==ev){
+    //             mq.push(sv);
+    //             return;
+    //         }
+    //     }
+    // }
+    
+}
+
+int main()
+{
+  int V, E, tempX, tempY;
+  cin >> V >> E;
+
+  /*
+
+  	   Write Your Code Here
+	   Complete the Rest of the Program
+	   You have to Print the output yourself
+	 
+  */
+    int** edges=new int*[V];
+    for(int i=0;i<V;i++){
+        edges[i]=new int[V];
+        for(int j=0;j<V;j++){
+            edges[i][j]=0;
+        }
+    }
+    for(int i=0;i<E;i++){
+        cin>>tempX>>tempY;
+        edges[tempX][tempY]=1;
+        edges[tempY][tempX]=1;
+    }
+    bool* visited=new bool[V];
+    int sv,ev;
+    cin>>sv>>ev;
+    DFS(edges, V, sv, ev, visited);
+    while(!mq.empty()){
+        cout<<mq.front()<<" ";
+        mq.pop();
+    }
+  return 0;
+}
